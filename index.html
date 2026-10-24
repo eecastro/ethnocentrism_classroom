@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ethnocentrism Inventory | Psych 100</title>
+<meta name="description" content="An anonymous in-class self-assessment based on the Generalized Ethnocentrism Scale (Neuliep & McCroskey).">
+<!--
+  Instructor notes
+  - Fully self-contained: no external fonts, scripts, analytics, cookies, or storage.
+    Answers live only in the open browser tab and vanish on refresh.
+  - Scoring follows the revised GENE scale (Neuliep & McCroskey, 1997; Neuliep, 2002):
+    reverse-score items 4, 7, 9; drop items 3, 6, 12, 15, 16, 17, 19; sum the remaining 15 (range 15–75).
+  - "Save as PDF" uses the browser's print dialog, which works on desktop, Chromebooks, iOS and Android.
+-->
+<style>
+:root{
+  --paper:#f3f6f5; --surface:#ffffff; --ink:#1b2733; --muted:#55646e; --line:#d3dcde;
+  --sea:#2b6a6e; --sea-ink:#ffffff; --sea-soft:#e0eceb; --sun:#d99a17; --sun-ink:#6e4a00;
+  --zone-low:#cfe4e2; --zone-mid:#ebe5cd; --zone-high:#efd3c7; --alert:#a3361f;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#10171c; --surface:#172127; --ink:#e3eaed; --muted:#9babb4; --line:#2b3940;
+    --sea:#76b9bb; --sea-ink:#0f1a1d; --sea-soft:#1c3133; --sun:#f0bb45; --sun-ink:#f0bb45;
+    --zone-low:#1e3a39; --zone-mid:#39361f; --zone-high:#47291f; --alert:#f08a70;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font:1.0625rem/1.6 var(--sans);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.wrap{max-width:46rem; margin:0 auto; padding:0 1.25rem}
+h1,h2,h3{font-family:var(--serif); font-weight:600; line-height:1.15; margin:0}
+h1{font-size:clamp(2.2rem,6vw,3.4rem); letter-spacing:-.01em}
+h2{font-size:1.65rem; margin-bottom:.6rem}
+h3{font-size:1.2rem; margin-bottom:.35rem}
+p{margin:0 0 1rem}
+a{color:var(--sea)}
+:focus-visible{outline:3px solid var(--sun); outline-offset:2px}
+
+/* Header */
+header.intro{padding:3.5rem 0 1.5rem}
+.course{color:var(--muted); font-size:.95rem; margin-bottom:.75rem}
+.lede{font-size:1.15rem; max-width:38rem; margin-top:1rem}
+.before{
+  background:var(--sea-soft); border-radius:14px; padding:1.25rem 1.4rem; margin:1.5rem 0 0;
+}
+.before h2{font-size:1.25rem}
+.before dl{margin:0}
+.before dt{font-weight:650; margin-top:.6rem}
+.before dd{margin:0}
+.privacy{font-size:.95rem; color:var(--muted); margin-top:1.1rem}
+
+/* Progress */
+.progress{
+  position:sticky; top:0; z-index:5; background:var(--paper);
+  padding:calc(.6rem + env(safe-area-inset-top,0px)) 0 .6rem; border-bottom:1px solid var(--line);
+}
+.progress .wrap{display:flex; align-items:center; gap:1rem}
+.bar{flex:1; height:8px; background:var(--line); border-radius:99px; overflow:hidden}
+.bar span{display:block; height:100%; width:0; background:var(--sea); transition:width .25s ease}
+.count{font-size:.9rem; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
+
+/* Scale key */
+.scale-key{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:.4rem; margin:1.75rem 0 .5rem;
+  font-size:.8rem; color:var(--muted); text-align:center;
+}
+.scale-key b{display:block; font-size:1rem; color:var(--ink)}
+
+/* Items */
+form{margin:0}
+fieldset.item{border:0; margin:0; padding:1.4rem 0 1.5rem; border-top:1px solid var(--line)}
+fieldset.item.missing{background:linear-gradient(90deg,color-mix(in srgb,var(--alert) 10%,transparent),transparent 70%)}
+legend{padding:0; display:flex; gap:.8rem; align-items:baseline; width:100%}
+.qnum{font-family:var(--serif); font-size:1.35rem; color:var(--sea); min-width:1.8rem; font-variant-numeric:lining-nums}
+.qtext{font-size:1.1rem; font-weight:520}
+.hint{display:block; font-size:.92rem; color:var(--muted); margin:.35rem 0 0 2.6rem}
+.opts{display:grid; grid-template-columns:repeat(5,1fr); gap:.4rem; margin:.9rem 0 0 2.6rem}
+.opt{position:relative; cursor:pointer}
+.opt input{position:absolute; opacity:0; inset:0; margin:0; cursor:pointer}
+.opt span{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.1rem;
+  min-height:3.6rem; padding:.45rem .2rem; border:1.5px solid var(--line); border-radius:10px;
+  background:var(--surface); text-align:center; transition:background .12s,border-color .12s;
+}
+.opt span b{font-size:1.1rem}
+.opt span small{font-size:.7rem; line-height:1.2; color:var(--muted)}
+.opt:hover span{border-color:var(--sea)}
+.opt input:focus-visible + span{outline:3px solid var(--sun); outline-offset:2px}
+.opt input:checked + span{background:var(--sea); border-color:var(--sea); color:var(--sea-ink)}
+.opt input:checked + span small{color:var(--sea-ink)}
+.missing-note{color:var(--alert); font-size:.9rem; margin:.5rem 0 0 2.6rem; display:none}
+fieldset.missing .missing-note{display:block}
+
+.submit-row{border-top:1px solid var(--line); padding:1.75rem 0 3rem}
+.btn{
+  font:inherit; font-weight:650; border:0; border-radius:10px; padding:.85rem 1.4rem; cursor:pointer;
+  background:var(--sea); color:var(--sea-ink);
+}
+.btn.ghost{background:transparent; color:var(--ink); border:1.5px solid var(--line)}
+.btn:hover{filter:brightness(1.07)}
+#formError{color:var(--alert); margin-top:.9rem; min-height:1.5em}
+
+/* Results */
+#results{padding:2.5rem 0 3rem; border-top:3px solid var(--sea)}
+#results section{margin-top:2.4rem}
+.print-head{display:none}
+.score-line{display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap; margin:.8rem 0 .4rem}
+.score-num{font-family:var(--serif); font-size:clamp(4rem,14vw,6rem); line-height:1; font-variant-numeric:lining-nums}
+.score-of{font-size:1.2rem; color:var(--muted)}
+.band{font-family:var(--serif); font-size:1.5rem; margin-bottom:1rem}
+
+/* The meter: the one bold element */
+.meter{margin:2rem 0 3.6rem; position:relative}
+.zones{display:flex; height:46px; border-radius:10px; overflow:hidden;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact}
+.zones div{display:flex; align-items:center; justify-content:center; font-size:.82rem; color:var(--ink)}
+.z-low{background:var(--zone-low); width:32.5%}
+.z-mid{background:var(--zone-mid); width:35%}
+.z-high{background:var(--zone-high); width:32.5%}
+.typical{position:absolute; top:-6px; height:58px; border:2px dashed var(--muted); border-radius:6px}
+.mid-tick{position:absolute; top:0; height:46px; width:2px; background:var(--muted); opacity:.6}
+.you{position:absolute; top:-30px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center}
+.you em{font-style:normal; font-weight:700; font-size:.85rem; color:var(--sun-ink); white-space:nowrap}
+.you i{display:block; width:4px; height:64px; background:var(--sun); border-radius:2px; margin-top:2px;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact}
+.ticks{position:relative; height:1.2rem; margin-top:.35rem; font-size:.8rem; color:var(--muted); font-variant-numeric:tabular-nums}
+.ticks span{position:absolute; transform:translateX(-50%)}
+.legend{display:flex; flex-wrap:wrap; gap:.4rem 1.4rem; font-size:.85rem; color:var(--muted); margin-top:1rem}
+.legend span::before{content:""; display:inline-block; width:14px; height:10px; margin-right:.4rem; vertical-align:middle; border-radius:2px}
+.legend .lg-you::before{background:var(--sun)}
+.legend .lg-typ::before{border:2px dashed var(--muted)}
+.legend .lg-mid::before{width:2px; background:var(--muted)}
+
+.refs{list-style:none; padding:0; margin:0}
+.refs li{display:grid; grid-template-columns:4.2rem 1fr; gap:.8rem; padding:.7rem 0; border-top:1px solid var(--line)}
+.refs li:last-child{border-bottom:1px solid var(--line)}
+.refs .val{font-family:var(--serif); font-size:1.5rem; line-height:1.1; font-variant-numeric:lining-nums}
+.refs .you-row .val{color:var(--sun-ink)}
+
+.movers{display:grid; gap:1.4rem; grid-template-columns:1fr}
+@media (min-width:640px){.movers{grid-template-columns:1fr 1fr}}
+.movers ul{padding-left:1.1rem; margin:.4rem 0 0}
+.movers li{margin-bottom:.55rem}
+.movers .ans{display:block; font-size:.88rem; color:var(--muted)}
+
+.how-table{width:100%; border-collapse:collapse; font-size:.95rem}
+.how-table td{padding:.5rem .4rem; border-top:1px solid var(--line); vertical-align:top}
+.how-table td:first-child{font-weight:650; white-space:nowrap}
+.table-scroll{overflow-x:auto}
+
+.concepts dt{font-weight:650; margin-top:.9rem}
+.concepts dd{margin:0}
+
+details.answers summary{cursor:pointer; font-weight:650; color:var(--sea)}
+.ans-table{width:100%; border-collapse:collapse; font-size:.9rem; margin-top:.8rem}
+.ans-table th,.ans-table td{text-align:left; padding:.4rem .4rem; border-top:1px solid var(--line); vertical-align:top}
+.ans-table th{font-weight:650}
+.ans-table td.use{color:var(--muted); white-space:nowrap}
+
+.actions{margin-top:2.6rem; padding:1.4rem; background:var(--sea-soft); border-radius:14px}
+.actions label{display:block; font-weight:650; margin-bottom:.35rem}
+.actions input[type=text]{
+  font:inherit; width:100%; max-width:22rem; padding:.6rem .7rem; border-radius:8px;
+  border:1.5px solid var(--line); background:var(--surface); color:var(--ink);
+}
+.actions .small{font-size:.88rem; color:var(--muted); margin:.4rem 0 1rem}
+.btn-row{display:flex; flex-wrap:wrap; gap:.7rem}
+
+footer{border-top:1px solid var(--line); padding:1.5rem 0 3rem; font-size:.85rem; color:var(--muted)}
+footer ol{padding-left:1.1rem; margin:.4rem 0 0}
+footer li{margin-bottom:.35rem}
+
+@media (max-width:520px){
+  .opts,.hint,.missing-note{margin-left:0}
+  .opt span small{font-size:.64rem}
+}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important; scroll-behavior:auto !important}
+}
+
+/* Print / Save as PDF */
+@media print{
+  :root{
+    --paper:#fff; --surface:#fff; --ink:#111; --muted:#444; --line:#bbb; --sea:#2b6a6e; --sea-ink:#fff;
+    --sea-soft:#fff; --sun:#c98a0a; --sun-ink:#6e4a00; --zone-low:#d6ebe9; --zone-mid:#f0ead2; --zone-high:#f3d9ce;
+    color-scheme:light;
+  }
+  @page{margin:16mm 14mm}
+  body{font-size:10.5pt; line-height:1.45}
+  .no-print{display:none !important}
+  .wrap{max-width:none; padding:0}
+  #results{border-top:0; padding-top:0}
+  #results section{margin-top:1.2rem; break-inside:avoid}
+  .print-head{display:block; border-bottom:2px solid #111; padding-bottom:.5rem; margin-bottom:1rem}
+  .print-head h1{font-size:20pt}
+  .print-head p{margin:.2rem 0 0}
+  .score-num{font-size:44pt}
+  .meter{margin:2.2rem 0 3rem}
+  .ans-table{font-size:9pt}
+  details.answers summary{display:none}
+  section.answers-sec{break-before:page}
+  footer{padding-top:.8rem}
+  a{color:inherit; text-decoration:none}
+}
+</style>
+</head>
+<body>
+
+<header class="intro wrap no-print">
+  <p class="course">Psych 100 &nbsp;|&nbsp; In-class activity</p>
+  <h1>Ethnocentrism Inventory</h1>
+  <p class="lede">22 quick statements about your culture and other cultures. Go with your first gut reaction. There are no right or wrong answers, and nobody sees your responses but you.</p>
+
+  <div class="before">
+    <h2>Two quick definitions</h2>
+    <dl>
+      <dt>“My culture”</dt>
+      <dd>The group whose way of life feels like home to you: your country, ethnic group, religion, or community. Pick whichever one comes to mind first and keep that one in mind the whole way through.</dd>
+      <dt>“Values and customs”</dt>
+      <dd>What a group thinks is important (values) and the traditions and everyday habits it follows (customs), like food, holidays, manners, or how families work.</dd>
+    </dl>
+  </div>
+  <p class="privacy">This page doesn’t collect, send, or save anything. Your answers stay in this browser tab and disappear when you close or refresh it. At the end you can save your results as a PDF if you want to keep them.</p>
+</header>
+
+<div class="progress no-print" aria-hidden="false">
+  <div class="wrap">
+    <div class="bar" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="22" aria-valuenow="0"><span id="barFill"></span></div>
+    <span class="count" id="countText" aria-live="polite">0 of 22 answered</span>
+  </div>
+</div>
+
+<main class="wrap">
+  <form id="inventory" class="no-print" novalidate>
+    <div class="scale-key" aria-hidden="true">
+      <div><b>1</b>Strongly disagree</div>
+      <div><b>2</b>Disagree</div>
+      <div><b>3</b>Neutral</div>
+      <div><b>4</b>Agree</div>
+      <div><b>5</b>Strongly agree</div>
+    </div>
+    <div id="items"></div>
+    <div class="submit-row">
+      <button type="submit" class="btn">See my results</button>
+      <p id="formError" role="alert"></p>
+    </div>
+  </form>
+
+  <div id="results" hidden></div>
+</main>
+
+<footer class="wrap">
+  <p><strong>About this inventory.</strong> These items are the revised Generalized Ethnocentrism (GENE) Scale by James Neuliep and James McCroskey, scored the way the authors recommend. It’s a classroom reflection tool, not a diagnosis or a measure of whether someone is a good person.</p>
+  <p><strong>Sources</strong></p>
+  <ol>
+    <li>Neuliep, J. W., &amp; McCroskey, J. C. (1997). The development of a U.S. and generalized ethnocentrism scale. <em>Communication Research Reports, 14</em>, 385–398.</li>
+    <li>Neuliep, J. W. (2002). Assessing the reliability and validity of the Generalized Ethnocentrism Scale. <em>Journal of Intercultural Communication Research, 31</em>, 201–215.</li>
+    <li>Scale and scoring instructions: <a href="https://www.jamescmccroskey.com/measures/ethnocentrism_scale.htm">jamescmccroskey.com</a>.</li>
+    <li>University student sample (about 750 students): <a href="https://www.nature.com/articles/s41598-022-21179-3">“A cross-cultural comparison of ethnocentrism and the intercultural willingness to communicate between two collectivistic cultures,” <em>Scientific Reports</em> (2022)</a>.</li>
+    <li>Teen sample: <a href="https://clinicaltrials.gov/study/NCT02122887">Peace-building interventions for Israeli and Palestinian youth, ClinicalTrials.gov NCT02122887</a>.</li>
+    <li>Pettijohn, T. F., &amp; Naples, G. M. (2009). Reducing ethnocentrism in U.S. college students by completing a cross-cultural psychology course.</li>
+  </ol>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var ITEMS = [
+    {n:1,  t:"Most other cultures are backward compared to my culture.", hint:"“Backward” here means behind the times or less advanced."},
+    {n:2,  t:"My culture should be the role model for other cultures."},
+    {n:3,  t:"People from other cultures act strange when they come to my culture."},
+    {n:4,  t:"Lifestyles in other cultures are just as valid as those in my culture.", hint:"“Valid” here means legit or reasonable, a perfectly fine way to live."},
+    {n:5,  t:"Other cultures should try to be more like my culture."},
+    {n:6,  t:"I am not interested in the values and customs of other cultures."},
+    {n:7,  t:"People in my culture could learn a lot from people in other cultures."},
+    {n:8,  t:"Most people from other cultures just don’t know what’s good for them."},
+    {n:9,  t:"I respect the values and customs of other cultures."},
+    {n:10, t:"Other cultures are smart to look up to our culture."},
+    {n:11, t:"Most people would be happier if they lived like people in my culture."},
+    {n:12, t:"I have many friends from different cultures."},
+    {n:13, t:"People in my culture have just about the best lifestyle of anywhere."},
+    {n:14, t:"Lifestyles in other cultures are not as valid as those in my culture.", hint:"“Valid” here means legit or reasonable, a perfectly fine way to live."},
+    {n:15, t:"I am very interested in the values and customs of other cultures."},
+    {n:16, t:"I apply my values when judging people who are different.", hint:"In other words: I use my own sense of right and wrong to judge people who aren’t like me."},
+    {n:17, t:"I see people who are similar to me as virtuous (good people who do the right thing)."},
+    {n:18, t:"I do not cooperate with people who are different."},
+    {n:19, t:"Most people in my culture just don’t know what is good for them."},
+    {n:20, t:"I do not trust people who are different."},
+    {n:21, t:"I dislike interacting with people from different cultures."},
+    {n:22, t:"I have little respect for the values and customs of other cultures."}
+  ];
+  var REVERSE = [4, 7, 9];
+  var FILLER  = [3, 6, 12, 15, 16, 17, 19];
+  var LABELS  = ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"];
+  var TOTAL   = ITEMS.length;
+
+  var itemsEl = document.getElementById("items");
+  var form = document.getElementById("inventory");
+  var results = document.getElementById("results");
+  var fill = document.getElementById("barFill");
+  var bar = fill.parentElement;
+  var countText = document.getElementById("countText");
+  var formError = document.getElementById("formError");
+
+  // Build the questions
+  ITEMS.forEach(function(it){
+    var fs = document.createElement("fieldset");
+    fs.className = "item";
+    fs.id = "item-" + it.n;
+    fs.setAttribute("tabindex", "-1");
+    var html = '<legend><span class="qnum">' + it.n + '</span><span class="qtext">' + it.t + '</span></legend>';
+    if (it.hint) html += '<span class="hint">' + it.hint + '</span>';
+    html += '<div class="opts">';
+    for (var v = 1; v <= 5; v++){
+      html += '<label class="opt"><input type="radio" name="q' + it.n + '" value="' + v + '" aria-label="' + v + ', ' + LABELS[v-1] + '">' +
+              '<span><b>' + v + '</b><small>' + LABELS[v-1] + '</small></span></label>';
+    }
+    html += '</div><p class="missing-note">Pick an answer for this one.</p>';
+    fs.innerHTML = html;
+    itemsEl.appendChild(fs);
+  });
+
+  function getAnswers(){
+    var a = {};
+    ITEMS.forEach(function(it){
+      var c = form.querySelector('input[name="q' + it.n + '"]:checked');
+      a[it.n] = c ? parseInt(c.value, 10) : null;
+    });
+    return a;
+  }
+
+  function updateProgress(){
+    var a = getAnswers(), done = 0;
+    ITEMS.forEach(function(it){ if (a[it.n] !== null) done++; });
+    fill.style.width = (done / TOTAL * 100) + "%";
+    bar.setAttribute("aria-valuenow", done);
+    countText.textContent = done + " of " + TOTAL + " answered";
+  }
+
+  form.addEventListener("change", function(e){
+    var fs = e.target.closest("fieldset.item");
+    if (fs) fs.classList.remove("missing");
+    updateProgress();
+    if (formError.textContent && !ITEMS.some(function(it){ return getAnswers()[it.n] === null; })) {
+      formError.textContent = "";
+    }
+  });
+
+  function recode(n, v){ return REVERSE.indexOf(n) > -1 ? 6 - v : v; }
+  function isScored(n){ return FILLER.indexOf(n) === -1; }
+
+  function band(score){
+    if (score <= 34) return "low";
+    if (score <= 55) return "moderate";
+    return "high";
+  }
+
+  var BAND_TEXT = {
+    low: {
+      name: "Low ethnocentrism",
+      body: "You mostly see other cultures’ ways of life as different, not worse. You’re probably curious about how other people live and don’t assume your way is the default. One caution: a low score doesn’t mean zero bias. Everyone favors their own group in small, automatic ways that a questionnaire like this can’t pick up, so it’s still worth noticing when “normal” really just means “what I’m used to.”"
+    },
+    moderate: {
+      name: "Moderate ethnocentrism",
+      body: "This is where most people land. You likely feel pride in and comfort with your own culture, mixed with some genuine openness to others. Psychologists see some ethnocentrism as a normal human default: we learn our culture’s ways as “the right way” long before we meet anyone who does things differently. The useful skill isn’t getting to zero; it’s catching yourself when your culture’s habits start to feel like the only reasonable ones."
+    },
+    high: {
+      name: "High ethnocentrism",
+      body: "You lean strongly toward seeing your own culture as the standard that others should be measured against. That can come from real pride, from not having had many chances to spend time with people from other cultures, or from a recent bad experience. Research links higher scores on this scale to less willingness to talk with people from other cultures, which can make college, work, and travel harder. Treat this as a starting point, not a verdict: attitudes like these can shift with experience."
+    }
+  };
+
+  function pct(score){ return ((score - 15) / 60 * 100); }
+
+  function renderResults(a){
+    var score = 0, rawAll = 0;
+    var scored = [];
+    ITEMS.forEach(function(it){
+      rawAll += a[it.n];
+      if (isScored(it.n)){
+        var r = recode(it.n, a[it.n]);
+        score += r;
+        scored.push({n:it.n, t:it.t, v:a[it.n], r:r, rev:REVERSE.indexOf(it.n) > -1});
+      }
+    });
+    var b = band(score);
+    var bt = BAND_TEXT[b];
+
+    var up = scored.filter(function(s){ return s.r >= 4; }).sort(function(x,y){ return y.r - x.r || x.n - y.n; }).slice(0, 4);
+    var open = scored.filter(function(s){ return s.r <= 2; }).sort(function(x,y){ return x.r - y.r || x.n - y.n; }).slice(0, 4);
+
+    function moverLi(s){
+      return '<li>#' + s.n + ' ' + s.t + '<span class="ans">You answered: ' + LABELS[s.v-1] +
+             (s.rev ? ' (this one is reverse-scored)' : '') + '</span></li>';
+    }
+
+    var date = new Date().toLocaleDateString(undefined, {year:"numeric", month:"long", day:"numeric"});
+    var p = pct(score);
+
+    var rows = ITEMS.map(function(it){
+      var use = FILLER.indexOf(it.n) > -1 ? "Not scored" : (REVERSE.indexOf(it.n) > -1 ? "Reverse-scored" : "Scored");
+      return '<tr><td>' + it.n + '</td><td>' + it.t + '</td><td>' + a[it.n] + ' (' + LABELS[a[it.n]-1] + ')</td><td class="use">' + use + '</td></tr>';
+    }).join("");
+
+    results.innerHTML =
+      '<div class="print-head">' +
+        '<h1>Ethnocentrism Inventory results</h1>' +
+        '<p id="printName"></p>' +
+        '<p>Psych 100 in-class activity, completed ' + date + '</p>' +
+      '</div>' +
+
+      '<h2 id="resultsHeading" tabindex="-1">Your results</h2>' +
+      '<div class="score-line"><span class="score-num">' + score + '</span><span class="score-of">out of 75</span></div>' +
+      '<p class="band">' + bt.name + '</p>' +
+      '<p>Scores can range from 15 (very open to other cultures) to 75 (very ethnocentric). Higher means you’re more likely to see your own culture as the center of the world and the yardstick for judging everyone else.</p>' +
+
+      '<div class="meter" aria-hidden="true">' +
+        '<div class="zones"><div class="z-low">Low</div><div class="z-mid">Moderate</div><div class="z-high">High</div></div>' +
+        '<div class="typical" style="left:' + pct(34) + '%; width:' + (pct(37) - pct(34)) + '%"></div>' +
+        '<div class="mid-tick" style="left:50%"></div>' +
+        '<div class="you" style="left:' + p + '%"><em>You: ' + score + '</em><i></i></div>' +
+        '<div class="ticks"><span style="left:0%">15</span><span style="left:' + pct(35) + '%">35</span><span style="left:50%">45</span><span style="left:' + pct(55) + '%">55</span><span style="left:100%">75</span></div>' +
+        '<div class="legend"><span class="lg-you">Your score</span><span class="lg-typ">Where published student and teen groups averaged (about 34–37)</span><span class="lg-mid">Neutral midpoint (45)</span></div>' +
+      '</div>' +
+
+      '<section><h2>What your score means</h2><p>' + bt.body + '</p></section>' +
+
+      '<section><h2>How you compare</h2>' +
+        '<p>Heads up: there’s no official U.S. national average for this scale. Researchers have mostly given it to groups of students, not to a nationally representative sample of Americans. So instead of a single “national” number, here are real reference points from published research.</p>' +
+        '<ul class="refs">' +
+          '<li class="you-row"><span class="val">' + score + '</span><span><strong>You</strong></span></li>' +
+          '<li><span class="val">~37</span><span>Average for about 750 university students in a 2022 study published in <em>Scientific Reports</em>. Students who had traveled abroad scored about the same as those who hadn’t.</span></li>' +
+          '<li><span class="val">~35</span><span>Average for Israeli and Palestinian teens (around age 16) at the start of a peace-building program.</span></li>' +
+          '<li><span class="val">45</span><span>The neutral midpoint: what you’d get by answering “Neutral” to every statement.</span></li>' +
+          '<li><span class="val">55+</span><span>The scale’s creators consider scores above 55 to be high ethnocentrism.</span></li>' +
+        '</ul>' +
+        '<p style="margin-top:1rem">The Low, Moderate, and High zones on the bar are rough guides for discussion. Only the “above 55 is high” cutoff comes from the scale’s authors.</p>' +
+      '</section>' +
+
+      '<section><h2>What moved your score</h2><div class="movers">' +
+        '<div><h3>Pushed it up</h3>' + (up.length ? '<ul>' + up.map(moverLi).join("") + '</ul>' : '<p>None of your answers pushed your score up much.</p>') + '</div>' +
+        '<div><h3>Kept it down</h3>' + (open.length ? '<ul>' + open.map(moverLi).join("") + '</ul>' : '<p>None of your answers pulled your score down much.</p>') + '</div>' +
+      '</div></section>' +
+
+      '<section><h2>Behind the scoring: a research methods mini-lesson</h2>' +
+        '<p>If you’d just added up all 22 answers, like the paper version’s “TOTAL” line suggests, you’d get <strong>' + rawAll + '</strong>. That’s not your real score, and the reason is a good example of how psychologists design questionnaires.</p>' +
+        '<div class="table-scroll"><table class="how-table"><tbody>' +
+          '<tr><td>15 items count</td><td>Only items 1, 2, 4, 5, 7, 8, 9, 10, 11, 13, 14, 18, 20, 21, and 22 go into your score.</td></tr>' +
+          '<tr><td>3 are flipped</td><td>Items 4, 7, and 9 are reverse-scored (5 becomes 1, 4 becomes 2, and so on), because agreeing with them signals <em>less</em> ethnocentrism. Mixing in reversed items catches people who just agree with everything, a habit called <em>acquiescence bias</em>.</td></tr>' +
+          '<tr><td>7 are fillers</td><td>Items 3, 6, 12, 15, 16, 17, and 19 aren’t scored at all. The authors included them to balance the number of positively and negatively worded statements, which also makes it harder to guess what’s being measured.</td></tr>' +
+        '</tbody></table></div>' +
+      '</section>' +
+
+      '<section><h2>Connect it to Psych 100</h2><dl class="concepts">' +
+        '<dt>Ethnocentrism</dt><dd>Judging other cultures by the standards of your own and seeing your group’s ways as the “correct” ones. Sociologist William Graham Sumner coined the term over a century ago.</dd>' +
+        '<dt>In-group bias</dt><dd>Our tendency to favor “us” over “them.” In the classic minimal group experiments, people favored their own group even when the groups were made up on the spot and meant nothing.</dd>' +
+        '<dt>Social identity theory</dt><dd>Part of how we feel about ourselves comes from the groups we belong to, so thinking well of our group can feel like thinking well of ourselves.</dd>' +
+        '<dt>Cultural relativism</dt><dd>The opposite stance: trying to understand a practice from inside the culture where it happens before judging it.</dd>' +
+        '<dt>The contact hypothesis</dt><dd>Under the right conditions (equal status, shared goals, real cooperation), spending time with people from other groups tends to reduce prejudice. Researchers have tested whether experiences like a cross-cultural psychology course or teaming up with international classmates lower scores on this very scale.</dd>' +
+      '</dl></section>' +
+
+      '<section><h2>Keep in mind</h2>' +
+        '<p>This is a self-report survey, so it captures what you <em>say</em> you believe, not necessarily how you act. People also tend to answer in ways that make them look good (<em>social desirability bias</em>), which can pull scores down, especially in a classroom. Your score also depends on which culture you pictured as “yours,” and it’s just one snapshot on one day.</p>' +
+      '</section>' +
+
+      '<section><h2>Think about it</h2><ol>' +
+        '<li>Which group did you picture as “my culture”? Would your score change if you’d picked a different one, like your country instead of your hometown?</li>' +
+        '<li>Think of a custom from another culture that once seemed strange to you. What would make it seem normal to someone who grew up with it?</li>' +
+        '<li>Where’s the line between healthy pride in your culture and ethnocentrism?</li>' +
+      '</ol></section>' +
+
+      '<section class="answers-sec"><details class="answers"><summary>See all your answers</summary>' +
+        '<h2 class="print-only-h" style="display:none">Your answers</h2>' +
+        '<div class="table-scroll"><table class="ans-table"><thead><tr><th>#</th><th>Statement</th><th>Your answer</th><th>How it’s used</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '</details></section>' +
+
+      '<div class="actions no-print">' +
+        '<label for="nameField">Add your name to the PDF (optional)</label>' +
+        '<input type="text" id="nameField" autocomplete="off" placeholder="Leave blank to stay anonymous">' +
+        '<p class="small">Only appears on your PDF. It isn’t saved or sent anywhere.</p>' +
+        '<div class="btn-row">' +
+          '<button type="button" class="btn" id="pdfBtn">Save results as PDF</button>' +
+          '<button type="button" class="btn ghost" id="editBtn">Change my answers</button>' +
+          '<button type="button" class="btn ghost" id="resetBtn">Start over</button>' +
+        '</div>' +
+        '<p class="small" style="margin:.9rem 0 0">In the print window, choose “Save as PDF” as the destination. On a phone, tap Share or Print, then save to Files or Drive.</p>' +
+      '</div>';
+
+    results.hidden = false;
+
+    document.getElementById("pdfBtn").addEventListener("click", function(){ window.print(); });
+    document.getElementById("editBtn").addEventListener("click", function(){
+      results.hidden = true;
+      document.getElementById("item-1").focus();
+      document.getElementById("item-1").scrollIntoView({behavior: smooth(), block:"start"});
+    });
+    document.getElementById("resetBtn").addEventListener("click", function(){
+      form.reset();
+      results.hidden = true;
+      results.innerHTML = "";
+      updateProgress();
+      window.scrollTo({top:0, behavior: smooth()});
+    });
+
+    var h = document.getElementById("resultsHeading");
+    h.scrollIntoView({behavior: smooth(), block:"start"});
+    h.focus({preventScroll:true});
+  }
+
+  function smooth(){
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+  }
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var a = getAnswers();
+    var missing = ITEMS.filter(function(it){ return a[it.n] === null; });
+    ITEMS.forEach(function(it){
+      document.getElementById("item-" + it.n).classList.toggle("missing", a[it.n] === null);
+    });
+    if (missing.length){
+      formError.textContent = "You’ve got " + missing.length + " statement" + (missing.length > 1 ? "s" : "") +
+        " left: #" + missing.map(function(m){ return m.n; }).join(", #") + ".";
+      var first = document.getElementById("item-" + missing[0].n);
+      first.scrollIntoView({behavior: smooth(), block:"center"});
+      first.focus({preventScroll:true});
+      return;
+    }
+    formError.textContent = "";
+    renderResults(a);
+  });
+
+  // Prepare the page for printing
+  window.addEventListener("beforeprint", function(){
+    var d = document.querySelector("details.answers");
+    if (d) d.open = true;
+    var h = document.querySelector(".print-only-h");
+    if (h) h.style.display = "block";
+    var nf = document.getElementById("nameField");
+    var pn = document.getElementById("printName");
+    if (pn) pn.textContent = (nf && nf.value.trim()) ? "Name: " + nf.value.trim() : "";
+  });
+  window.addEventListener("afterprint", function(){
+    var h = document.querySelector(".print-only-h");
+    if (h) h.style.display = "none";
+  });
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
